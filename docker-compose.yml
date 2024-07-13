@@ -1,6 +1,8 @@
 version: '3.8'
+name: kinnarchowdhury-wordpress
 services:
   mariadb:
+    container_name: mariadb
     image: mariadb
     volumes:
       - ./db_data:/var/lib/mysql
@@ -12,11 +14,51 @@ services:
       MYSQL_PASSWORD: WPadmin@123
     ports:
       - "3308:3306"
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - 3309:80
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: mariadb
+      PMA_USER: root
+      PMA_PASSWORD: Root#*#505
+    depends_on:
+      - mariadb
+
+  # php:
+  #   container_name: php
+  #   depends_on:
+  #     - mariadb
+  #   build:
+  #     context: ./php
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - '../:/usr/share/nginx/html'
+  #     - './php/php-logging.conf:/usr/local/etc/php-fpm.d/zz-log.conf'
+  #   ports:
+  #     - 9000:9000
+
   wordpress:
+    container_name: wordpress
     depends_on: 
       - mariadb
-    build:
-      context: ./wordpress
-      dockerfile: Dockerfile
+    image: wordpress
+    links:
+     - mariadb:mariadbs
+    environment:
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: wordpress_admin
+      WORDPRESS_DB_PASSWORD: WPadmin@123
+      WORDPRESS_DB_NAME: wordpress
     ports:
-      - "80:80"
+     - 80:80
+    volumes:
+     - ./wordpress:/var/www/html
+    # build:
+    #   context: ./wordpress
+    #   dockerfile: Dockerfile
+    # ports:
+    #   - "80:80"
