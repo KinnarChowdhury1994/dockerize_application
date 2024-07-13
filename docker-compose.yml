@@ -10,11 +10,26 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: Root#*#505
       MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress_admin
-      MYSQL_PASSWORD: WPadmin@123
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: WPadmin123
     ports:
       - "3308:3306"
   
+  php:
+    container_name: php
+    depends_on:
+      - mariadb
+    image: php
+    restart: always
+    # build:
+    #   context: ./php
+    #   dockerfile: Dockerfile
+    # volumes:
+    #   - '../:/var/www/html'
+    #   - './php/php-logging.conf:/usr/local/etc/php-fpm.d/zz-log.conf'
+    # ports:
+    #   - 9000:9000
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     restart: always
@@ -27,36 +42,30 @@ services:
       PMA_PASSWORD: Root#*#505
     depends_on:
       - mariadb
-
-  # php:
-  #   container_name: php
-  #   depends_on:
-  #     - mariadb
-  #   build:
-  #     context: ./php
-  #     dockerfile: Dockerfile
-  #   volumes:
-  #     - '../:/usr/share/nginx/html'
-  #     - './php/php-logging.conf:/usr/local/etc/php-fpm.d/zz-log.conf'
-  #   ports:
-  #     - 9000:9000
+      - php
 
   wordpress:
     container_name: wordpress
     depends_on: 
       - mariadb
+      - php
+      - phpmyadmin
     image: wordpress
-    links:
-     - mariadb:mariadbs
+    # links:
+    #  - mariadb:mariadb
     environment:
-      WORDPRESS_DB_HOST: mariadb
-      WORDPRESS_DB_USER: wordpress_admin
-      WORDPRESS_DB_PASSWORD: WPadmin@123
+      WORDPRESS_DB_HOST: 127.0.0.1:3308
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: WPadmin123
       WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_COLLATE: utf8mb4_general_ci
     ports:
      - 80:80
     volumes:
      - ./wordpress:/var/www/html
+    #  - ./wordpres/wp-admin:/var/www/html/wp-admin
+    #  - ./wordpres/wp-content:/var/www/html/wp-content
+    #  - ./wordpres/wp-includes:/var/www/html/wp-includes
     # build:
     #   context: ./wordpress
     #   dockerfile: Dockerfile
