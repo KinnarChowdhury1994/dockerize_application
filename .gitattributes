@@ -1,0 +1,2 @@
+wordpress/* filter=lfs diff=lfs merge=lfs -text
+db_data/* filter=lfs diff=lfs merge=lfs -text
