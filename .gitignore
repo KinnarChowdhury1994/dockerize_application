@@ -4,3 +4,5 @@ wordpress
 wordpress/*
 *db_data
 *db_data/*
+wordpress_app/mariadb_data
+wordpress_app/wordpress
