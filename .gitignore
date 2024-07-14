@@ -1,5 +1,6 @@
 # Logs
 secrets.txt
+wordpress_app
 logs
 *.log
 npm-debug.log*
