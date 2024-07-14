@@ -1,0 +1,72 @@
+version: '3.8'
+
+name: 'kinnarchowdhury-streaming-app'
+
+services:
+
+  streamingmongodb:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: kinnar
+      MONGO_INITDB_ROOT_PASSWORD: kinnar
+    ports:
+      - 27017:27017
+    # volumes:
+    #   - stream_mongo_data:/data/db:rw
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: kinnar
+      ME_CONFIG_MONGODB_ADMINPASSWORD: kinnar
+      ME_CONFIG_MONGODB_URL: mongodb://kinnar:kinnar@streamingmongodb:27017/
+      ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - streamingmongodb
+
+  mern-chat-svc:
+    build:
+      context: ./backend/chatService
+      dockerfile: Dockerfile
+  
+  mern-core-svc:
+    build:
+      context: ./backend/coreApiService
+      dockerfile: Dockerfile
+
+  mern-auth-svc:
+    build:
+      context: ./backend/authService
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    depends_on:
+      - streamingmongodb
+      # - mongo-express
+
+  mern-stream-svc:
+    build:
+      context: ./backend/streamingService
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    depends_on:
+      - streamingmongodb
+      # - mongo-express
+
+  mern-stream-ui:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mern-stream-svc
+      - mern-auth-svc
+
+# volumes:
+#   stream_mongo_data:
