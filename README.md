@@ -34,7 +34,7 @@ docker compose up -d
  ✔ Container kinnarchowdhury-wp-app-adminer-1    Started                                                                                                                   11.8s 
 ```
  - You Can check the database user accessability using adminer running at <b>http://localhost:8080/</b>
- - Verify your wordpress installation at <b>http://localhost:8080/</b>
+ - Verify your wordpress installation at <b>http://localhost:8001/</b>
 
 ##### References
  - https://hub.docker.com/_/mariadb
