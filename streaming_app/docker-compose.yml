@@ -44,8 +44,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3001:3001"
-    depends_on:
-      - streamingmongodb
+    # depends_on:
+    #   - streamingmongodb
       # - mongo-express
 
   mern-stream-svc:
