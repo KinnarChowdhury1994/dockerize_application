@@ -55,8 +55,8 @@ services:
      - mariadb:mariadb
     environment:
       WORDPRESS_DB_HOST: 127.0.0.1:3308
-      WORDPRESS_DB_USER: wordpress_admin
-      WORDPRESS_DB_PASSWORD: WPadmin123
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: Root#*#505
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DB_COLLATE: utf8mb4_general_ci
     ports:
