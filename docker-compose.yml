@@ -10,7 +10,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: Root#*#505
       MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
+      MYSQL_USER: wordpress_admin
       MYSQL_PASSWORD: WPadmin123
     ports:
       - "3308:3306"
@@ -55,7 +55,7 @@ services:
      - mariadb:mariadb
     environment:
       WORDPRESS_DB_HOST: 127.0.0.1:3308
-      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_USER: wordpress_admin
       WORDPRESS_DB_PASSWORD: WPadmin123
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DB_COLLATE: utf8mb4_general_ci
