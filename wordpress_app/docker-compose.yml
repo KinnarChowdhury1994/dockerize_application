@@ -1,0 +1,54 @@
+version: '3.1'
+
+name: kinnarchowdhury-wp-app
+
+services:
+
+  mariadb:
+    image: mariadb:10.5
+    restart: always
+    environment:
+      # MARIADB_ROOT_HOST: $ROOT_HOST
+      MARIADB_ROOT_PASSWORD: $ROOT_PASSWORD
+      MARIADB_USER: $WP_USER
+      MARIADB_PASSWORD: $WP_PASS
+      MARIADB_DATABASE: $WP_DB
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - $DB_PORT:3306
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  wordpress:
+    image: wordpress
+    restart: always
+    ports:
+      - 8081:80
+    environment:
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: $WP_USER
+      WORDPRESS_DB_PASSWORD: $WP_PASS
+      WORDPRESS_DB_NAME: $WP_DB
+    volumes:
+      - wordpress:/var/www/html
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+volumes:
+  db_data:
+  wordpress:

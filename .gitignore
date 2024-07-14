@@ -1,4 +1,6 @@
+.env
 secrets.txt
 wordpress
 wordpress/*
-db_data/*
+*db_data
+*db_data/*
